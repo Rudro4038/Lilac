@@ -25,9 +25,9 @@ function Nav() {
   }, []);
 
   return (
-    <div className="sticky top-0 left-0 z-40 transition-all duration-300">
+    <div className="sticky top-0 left-0 z-40 transition-all duration-300 ">
       <div
-        className={`w-full flex justify-between bg-[#400E32] items-center relative text-[#F2CD5C] ${
+        className={`w-full flex justify-between bg-[#400E32] items-center relative text-[#F2CD5C] h-[50px] ${
           isSticky ? "rounded-2xl " : ""
         }`}
         style={{
