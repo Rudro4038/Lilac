@@ -1,6 +1,6 @@
 import Home from "./pages/Home";
 import "./App.css";
-import LayOut from "./components/Layout";
+import LayOut from "./components/LayOut";
 import ProductShow from "./pages/ProductShow";
 import Profile from "./pages/Profile";
 import Order from "./pages/Order";
