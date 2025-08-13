@@ -1,10 +1,10 @@
 export const firebaseConfig = {
-  apiKey: 'AIzaSyBTZPDpxnVQBJdFmJ_jdRLcToV-XXE6OdA',
-  authDomain: 'lilac-138d8.firebaseapp.com',
-  databaseURL:'https://lilac-138d8-default-rtdb.asia-southeast1.firebasedatabase.app',
-  projectId: 'lilac-138d8',
-  storageBucket: 'lilac-138d8.firebasestorage.app',
-  messagingSenderId: '363810280345',
-  appId: '1:363810280345:web:542eea60f9403303c8f908',
-  measurementId: 'G-4DWMZXSCKX',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };

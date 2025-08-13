@@ -36,7 +36,7 @@ const ImageContainer = ({ singleProduct, deletable, onDeleteImage }) => {
 
   return (
     <>
-      {singleProduct && singleProduct.imageLinks.length > 0 ? (
+      {singleProduct && singleProduct.imageLinks && singleProduct.imageLinks.length > 0 ? (
         <>
           <div className="relative">
             <img

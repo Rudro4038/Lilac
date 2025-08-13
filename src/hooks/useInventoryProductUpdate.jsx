@@ -15,11 +15,11 @@ const InventoryProductUpdate = () => {
       
       await update(productRef, updateData);
       
-      console.log(`Product ${productID} in category ${categoryID} updated successfully`);
+      // console.log(`Product ${productID} in category ${categoryID} updated successfully`);
       return { success: true, message: 'Product updated successfully' };
       
     } catch (error) {
-      console.error('Error updating product:', error);
+      // console.error('Error updating product:', error);
       return { success: false, message: error.message };
     }
     

@@ -26,14 +26,19 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
 
   useEffect(() => {
     if (singleProduct) {
-      // console.log(singleProduct);
-      setFormData(singleProduct);
+      // Ensure arrays are always arrays (Firebase might return null for empty arrays)
+      setFormData({
+        ...singleProduct,
+        colors: singleProduct.colors || [],
+        tags: singleProduct.tags || [],
+        imageLinks: singleProduct.imageLinks || [],
+      });
     }
-
-    // else {
-    //   console.log('edit this product nai');
-    // }
   }, [singleProduct, isExpanded]);
+
+  useEffect(()=>{
+    console.log(formData);
+  },[formData]);
 
   const handleInputChange = e => {
     const { name, value, type } = e.target;
@@ -46,7 +51,7 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
   const onDeleteImage = (link) => {
     setFormData(prev => ({
       ...prev,
-      imageLinks: prev.imageLinks.filter((_) => _ !== link)
+      imageLinks: Array.isArray(prev.imageLinks) ? prev.imageLinks.filter((_) => _ !== link) : []
     }));
   };
 
@@ -63,7 +68,7 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
   const removeColor = colorToRemove => {
     setFormData(prev => ({
       ...prev,
-      colors: prev.colors.filter(color => color !== colorToRemove),
+      colors: Array.isArray(prev.colors) ? prev.colors.filter(color => color !== colorToRemove) : [],
     }));
   };
 
@@ -80,7 +85,7 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
   const removeTag = tagToRemove => {
     setFormData(prev => ({
       ...prev,
-      tags: prev.tags.filter(tag => tag !== tagToRemove),
+      tags: Array.isArray(prev.tags) ? prev.tags.filter(tag => tag !== tagToRemove) : [],
     }));
   };
 
@@ -250,6 +255,7 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
                 <div className="flex gap-2 mb-2">
                   <input
                     type="text"
+                    
                     value={colorInput}
                     onChange={e => setColorInput(e.target.value)}
                     className="flex-1 px-3 py-2 border border-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-[#400E32] focus:border-transparent"
@@ -261,7 +267,7 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
                   </GeneralButton>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {formData.colors.map((color, index) => (
+                  {Array.isArray(formData.colors) && formData.colors.length > 0 && formData.colors.map((color, index) => (
                     <span
                       key={index}
                       className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-[#400E32] text-[#F2CD5C]"
@@ -289,14 +295,14 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
                     onChange={e => setTagInput(e.target.value)}
                     className="flex-1 px-3 py-2 border border-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-[#400E32] focus:border-transparent"
                     placeholder="Enter tag (e.g., leather, compact)"
-                    onKeyPress={e => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                    onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag())}
                   />
                   <GeneralButton type="button" onClick={addTag} variant="primary" size="small">
                     Add
                   </GeneralButton>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {formData.tags.map((tag, index) => (
+                  {Array.isArray(formData.tags) && formData.tags.length > 0 && formData.tags.map((tag, index) => (
                     <span
                       key={index}
                       className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-[#F2CD5C] text-[#400E32]"
@@ -326,10 +332,10 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
                   onClick={async () => {
                     const result = await updateProduct(categoryID, formData.productID, formData);
                     if (result.success) {
-                      console.log('Product updated successfully!');
+                      // console.log('Product updated successfully!');
                       setIsExpanded(false);
                     } else {
-                      console.error('Update failed:', result.message);
+                      // console.error('Update failed:', result.message);
                     }
                   }}
                 >
