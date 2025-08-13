@@ -4,7 +4,12 @@ import UploadWidgets from './UploadWidgets';
 import ImageContainer from './ImageContainer';
 import InventoryProductUpdate from '../hooks/useInventoryProductUpdate';
 
-const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID }) => {
+const CollapseableForm = ({ 
+  isExpanded = false, 
+  setIsExpanded = () => {}, 
+  singleProduct = null, 
+  categoryID = null 
+}) => {
   const { updateProduct } = InventoryProductUpdate();
   const [formData, setFormData] = useState({
     productID: '',
@@ -25,13 +30,21 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
   const [tagInput, setTagInput] = useState('');
 
   useEffect(() => {
-    if (singleProduct) {
+    if (singleProduct && typeof singleProduct === 'object') {
       // Ensure arrays are always arrays (Firebase might return null for empty arrays)
       setFormData({
-        ...singleProduct,
-        colors: singleProduct.colors || [],
-        tags: singleProduct.tags || [],
-        imageLinks: singleProduct.imageLinks || [],
+        productID: singleProduct.productID || '',
+        name: singleProduct.name || '',
+        price: typeof singleProduct.price === 'number' ? singleProduct.price : 0,
+        currency: singleProduct.currency || 'BDT',
+        discount: typeof singleProduct.discount === 'number' ? singleProduct.discount : 0,
+        rating: typeof singleProduct.rating === 'number' ? singleProduct.rating : 0,
+        reviews: typeof singleProduct.reviews === 'number' ? singleProduct.reviews : 0,
+        description: singleProduct.description || '',
+        colors: Array.isArray(singleProduct.colors) ? singleProduct.colors : [],
+        tags: Array.isArray(singleProduct.tags) ? singleProduct.tags : [],
+        imageLinks: Array.isArray(singleProduct.imageLinks) ? singleProduct.imageLinks : [],
+        stock: typeof singleProduct.stock === 'number' ? singleProduct.stock : 0,
       });
     }
   }, [singleProduct, isExpanded]);
@@ -40,36 +53,97 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
     // console.log(formData);
   }, [formData]);
 
+  // Render early error if critical props are missing
+  if (!categoryID) {
+    return (
+      <div className="p-4 bg-red-50 border border-red-200 rounded-md">
+        <p className="text-red-600 text-sm">Error: Category ID is required</p>
+      </div>
+    );
+  }
+
   const handleInputChange = e => {
     const { name, value, type } = e.target;
+    
+    let processedValue = value;
+    
+    // Type-safe number conversion
+    if (type === 'number') {
+      processedValue = value === '' ? 0 : parseFloat(value);
+      // Ensure it's a valid number
+      if (isNaN(processedValue)) {
+        processedValue = 0;
+      }
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'number' ? parseFloat(value) || null : value,
+      [name]: processedValue,
     }));
   };
 
   const submitCollapsableForm = async (e) => {
+    e.preventDefault();
 
-    e.preventDefault()
+    // Comprehensive validation
+    const validationErrors = [];
 
-    if (!formData.productID || formData.productID.trim() === '') {
-      alert('Product ID is required');
+    if (!formData.productID || typeof formData.productID !== 'string' || formData.productID.trim() === '') {
+      validationErrors.push('Product ID is required');
+    }
+    
+    if (!formData.name || typeof formData.name !== 'string' || formData.name.trim() === '') {
+      validationErrors.push('Product name is required');
+    }
+    
+    if (!formData.price || typeof formData.price !== 'number' || formData.price <= 0) {
+      validationErrors.push('Price must be greater than 0');
+    }
+    
+    if (typeof formData.discount === 'number' && (formData.discount < 0 || formData.discount > 100)) {
+      validationErrors.push('Discount must be between 0 and 100');
+    }
+    
+    if (typeof formData.rating === 'number' && (formData.rating < 0 || formData.rating > 5)) {
+      validationErrors.push('Rating must be between 0 and 5');
+    }
+    
+    if (typeof formData.stock === 'number' && formData.stock < 0) {
+      validationErrors.push('Stock cannot be negative');
+    }
+
+    // Show validation errors
+    if (validationErrors.length > 0) {
+      alert('Please fix the following errors:\n' + validationErrors.join('\n'));
       return;
     }
-    if (!formData.name || formData.name.trim() === '') {
-      alert('Name is required');
-      return;
-    }
-    if (!formData.price || formData.price <= 0) {
-      alert('Price is required and must be greater than 0');
-      return;
-    }
-    const result = await updateProduct(categoryID, formData.productID, formData);
-    if (result.success) {
-      // console.log('Product updated successfully!');
-      setIsExpanded(false);
-    } else {
-      // console.error('Update failed:', result.message);
+
+    try {
+      const result = await updateProduct(categoryID, formData.productID, formData);
+      if (result && result.success) {
+        setIsExpanded(false);
+        // Reset form for new product creation
+        if (!singleProduct) {
+          setFormData({
+            productID: '',
+            name: '',
+            price: 0,
+            currency: 'BDT',
+            discount: 0,
+            rating: 0,
+            reviews: 0,
+            description: '',
+            colors: [],
+            stock: 0,
+            tags: [],
+            imageLinks: [],
+          });
+        }
+      } else {
+        alert('Update failed: ' + (result?.message || 'Unknown error'));
+      }
+    } catch (error) {
+      alert('An error occurred: ' + (error.message || 'Unknown error'));
     }
   };
 
@@ -81,16 +155,24 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
   };
 
   const addColor = () => {
-    if (colorInput.trim() && !formData.colors.includes(colorInput.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        colors: [...prev.colors, colorInput.trim()],
-      }));
-      setColorInput('');
-    }
+    if (!colorInput || typeof colorInput !== 'string') return;
+    
+    const trimmedColor = colorInput.trim();
+    if (!trimmedColor) return;
+    
+    const currentColors = Array.isArray(formData.colors) ? formData.colors : [];
+    if (currentColors.includes(trimmedColor)) return;
+    
+    setFormData(prev => ({
+      ...prev,
+      colors: [...currentColors, trimmedColor],
+    }));
+    setColorInput('');
   };
 
   const removeColor = colorToRemove => {
+    if (!colorToRemove || typeof colorToRemove !== 'string') return;
+    
     setFormData(prev => ({
       ...prev,
       colors: Array.isArray(prev.colors) ? prev.colors.filter(color => color !== colorToRemove) : [],
@@ -98,16 +180,24 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
   };
 
   const addTag = () => {
-    if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        tags: [...prev.tags, tagInput.trim()],
-      }));
-      setTagInput('');
-    }
+    if (!tagInput || typeof tagInput !== 'string') return;
+    
+    const trimmedTag = tagInput.trim();
+    if (!trimmedTag) return;
+    
+    const currentTags = Array.isArray(formData.tags) ? formData.tags : [];
+    if (currentTags.includes(trimmedTag)) return;
+    
+    setFormData(prev => ({
+      ...prev,
+      tags: [...currentTags, trimmedTag],
+    }));
+    setTagInput('');
   };
 
   const removeTag = tagToRemove => {
+    if (!tagToRemove || typeof tagToRemove !== 'string') return;
+    
     setFormData(prev => ({
       ...prev,
       tags: Array.isArray(prev.tags) ? prev.tags.filter(tag => tag !== tagToRemove) : [],
@@ -126,7 +216,7 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
     setFormData({
       productID: '',
       name: '',
-      price: '',
+      price: 0,
       currency: 'BDT',
       discount: 0,
       rating: 0,

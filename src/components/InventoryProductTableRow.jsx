@@ -26,11 +26,15 @@ const InventoryProductTableRow = ({ singleProduct, categoryID }) => {
   };
 
   const formatPrice = (price, discount) => {
-    const discountedPrice = price - (price * discount) / 100;
+    // Safety checks for valid numbers
+    const validPrice = typeof price === 'number' && !isNaN(price) ? price : 0;
+    const validDiscount = typeof discount === 'number' && !isNaN(discount) ? discount : 0;
+    
+    const discountedPrice = validPrice - (validPrice * validDiscount) / 100;
     return {
-      original: price.toFixed(2),
+      original: validPrice.toFixed(2),
       final: discountedPrice.toFixed(2),
-      savings: (price - discountedPrice).toFixed(2),
+      savings: (validPrice - discountedPrice).toFixed(2),
     };
   };
 
