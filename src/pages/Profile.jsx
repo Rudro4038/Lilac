@@ -1,44 +1,44 @@
-import React from "react";
+import React from 'react';
 
 const Profile = () => {
   // Mock data for cart items
   const cartItems = [
     {
       id: 1,
-      name: "Branded Glowy Backpack",
+      name: 'Branded Glowy Backpack',
       price: 129.99,
       quantity: 1,
-      image: "/bag1.png",
+      image: '/bag1.png',
     },
     {
       id: 2,
-      name: "Leather Wallet",
+      name: 'Leather Wallet',
       price: 49.99,
       quantity: 2,
-      image: "/bag1.png",
+      image: '/bag1.png',
     },
   ];
 
   // Mock data for previous orders
   const previousOrders = [
     {
-      id: "ORD-1234",
-      date: "2025-07-12",
-      status: "Delivered",
+      id: 'ORD-1234',
+      date: '2025-07-12',
+      status: 'Delivered',
       items: 3,
       total: 259.97,
     },
     {
-      id: "ORD-1189",
-      date: "2025-06-28",
-      status: "Shipped",
+      id: 'ORD-1189',
+      date: '2025-06-28',
+      status: 'Shipped',
       items: 1,
       total: 129.99,
     },
     {
-      id: "ORD-1023",
-      date: "2025-06-15",
-      status: "Delivered",
+      id: 'ORD-1023',
+      date: '2025-06-15',
+      status: 'Delivered',
       items: 2,
       total: 89.98,
     },
@@ -84,7 +84,7 @@ const Profile = () => {
             {cartItems.length > 0 ? (
               <>
                 <div className="space-y-4 mb-6">
-                  {cartItems.map((item) => (
+                  {cartItems.map(item => (
                     <div
                       key={item.id}
                       className="flex items-center gap-4 pb-4 border-b"
@@ -119,7 +119,7 @@ const Profile = () => {
                 <div className="flex justify-between items-center border-t pt-4">
                   <span className="font-semibold text-black">Total</span>
                   <span className="font-bold text-[#400E32] text-xl">
-                    Tk  
+                    Tk
                     {cartItems
                       .reduce(
                         (sum, item) => sum + item.price * item.quantity,
@@ -167,7 +167,7 @@ const Profile = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {previousOrders.map((order) => (
+                    {previousOrders.map(order => (
                       <tr key={order.id} className="border-b hover:bg-gray-50">
                         <td className="py-3">
                           <div className="w-12 h-12 rounded-md overflow-hidden">
@@ -187,9 +187,9 @@ const Profile = () => {
                         <td className="py-3">
                           <span
                             className={`px-2 py-1 rounded-full text-xs ${
-                              order.status === "Delivered"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-blue-100 text-blue-800"
+                              order.status === 'Delivered'
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-blue-100 text-blue-800'
                             }`}
                           >
                             {order.status}

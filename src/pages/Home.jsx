@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const Home = () => {
   return (
@@ -6,7 +6,6 @@ const Home = () => {
       <div className="h-[300px] w-full bg-[#90165929]"></div>
       <div className="h-[300px] w-[80%] m-auto my-8  bg-[#90165929]"></div>
       <div className="h-[300px] w-[80%] m-auto my-8  bg-[#90165929]"></div>
-
     </>
   );
 };

@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
 const Footer = () => {
   const f = () => {
-    console.log("f clicked");
+    console.log('f clicked');
   };
 
   return (
@@ -72,11 +72,11 @@ const Footer = () => {
           </div>
         </div>
       </footer>
-      <div className="w-full text-center bg-[#90165951] font-GeneralText text-[#e3d4a7] ">
-        {" "}
-        <span className="cursor-pointer text-black" onClick={f}>
+      <div className="w-full text-center bg-[#400E32] font-GeneralText text-[#e3d4a7] ">
+        {' '}
+        <span className="cursor-pointer text-gray-100" onClick={f}>
           &copy; 2025 Web Studio.
-        </span>{" "}
+        </span>{' '}
       </div>
     </>
   );

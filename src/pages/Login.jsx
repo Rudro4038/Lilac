@@ -1,5 +1,5 @@
-import React from "react";
-import SignUp from "../components/SignUp";
+import React from 'react';
+import SignUp from '../components/SignUp';
 
 const Login = () => {
   return (
@@ -7,7 +7,7 @@ const Login = () => {
       <div className="w-full bg-tranparent my-[20px]  flex">
         <div className="w-[60%] "></div>
         <div className="w-[40%] ">
-            <SignUp></SignUp>
+          <SignUp></SignUp>
         </div>
         <div></div>
       </div>
