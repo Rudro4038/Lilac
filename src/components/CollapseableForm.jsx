@@ -9,7 +9,7 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
   const [formData, setFormData] = useState({
     productID: '',
     name: '',
-    price: '',
+    price: 0,
     currency: 'BDT',
     discount: 0,
     rating: 0,
@@ -36,9 +36,9 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
     }
   }, [singleProduct, isExpanded]);
 
-  useEffect(()=>{
-    console.log(formData);
-  },[formData]);
+  useEffect(() => {
+    // console.log(formData);
+  }, [formData]);
 
   const handleInputChange = e => {
     const { name, value, type } = e.target;
@@ -48,10 +48,35 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
     }));
   };
 
-  const onDeleteImage = (link) => {
+  const submitCollapsableForm = async (e) => {
+
+    e.preventDefault()
+
+    if (!formData.productID || formData.productID.trim() === '') {
+      alert('Product ID is required');
+      return;
+    }
+    if (!formData.name || formData.name.trim() === '') {
+      alert('Name is required');
+      return;
+    }
+    if (!formData.price || formData.price <= 0) {
+      alert('Price is required and must be greater than 0');
+      return;
+    }
+    const result = await updateProduct(categoryID, formData.productID, formData);
+    if (result.success) {
+      // console.log('Product updated successfully!');
+      setIsExpanded(false);
+    } else {
+      // console.error('Update failed:', result.message);
+    }
+  };
+
+  const onDeleteImage = link => {
     setFormData(prev => ({
       ...prev,
-      imageLinks: Array.isArray(prev.imageLinks) ? prev.imageLinks.filter((_) => _ !== link) : []
+      imageLinks: Array.isArray(prev.imageLinks) ? prev.imageLinks.filter(_ => _ !== link) : [],
     }));
   };
 
@@ -255,7 +280,6 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
                 <div className="flex gap-2 mb-2">
                   <input
                     type="text"
-                    
                     value={colorInput}
                     onChange={e => setColorInput(e.target.value)}
                     className="flex-1 px-3 py-2 border border-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-[#400E32] focus:border-transparent"
@@ -267,21 +291,23 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
                   </GeneralButton>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {Array.isArray(formData.colors) && formData.colors.length > 0 && formData.colors.map((color, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-[#400E32] text-[#F2CD5C]"
-                    >
-                      {color}
-                      <button
-                        type="button"
-                        onClick={() => removeColor(color)}
-                        className="ml-2 text-[#F2CD5C] hover:text-white"
+                  {Array.isArray(formData.colors) &&
+                    formData.colors.length > 0 &&
+                    formData.colors.map((color, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-[#400E32] text-[#F2CD5C]"
                       >
-                        ×
-                      </button>
-                    </span>
-                  ))}
+                        {color}
+                        <button
+                          type="button"
+                          onClick={() => removeColor(color)}
+                          className="ml-2 text-[#F2CD5C] hover:text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
                 </div>
               </div>
 
@@ -302,42 +328,37 @@ const CollapseableForm = ({ isExpanded, setIsExpanded, singleProduct, categoryID
                   </GeneralButton>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {Array.isArray(formData.tags) && formData.tags.length > 0 && formData.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-[#F2CD5C] text-[#400E32]"
-                    >
-                      {tag}
-                      <button
-                        type="button"
-                        onClick={() => removeTag(tag)}
-                        className="ml-2 text-[#400E32] hover:text-gray-600"
+                  {Array.isArray(formData.tags) &&
+                    formData.tags.length > 0 &&
+                    formData.tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-[#F2CD5C] text-[#400E32]"
                       >
-                        ×
-                      </button>
-                    </span>
-                  ))}
+                        {tag}
+                        <button
+                          type="button"
+                          onClick={() => removeTag(tag)}
+                          className="ml-2 text-[#400E32] hover:text-gray-600"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
                 </div>
               </div>
 
               <ImageContainer singleProduct={formData} deletable={true} onDeleteImage={onDeleteImage} />
               <UploadWidgets categoryID={categoryID} formData={formData} setFormData={setFormData} />
 
-              {/* Submit Button */}
-              <div className="flex justify-end pt-4">
+              {/* Submit Button - Fixed positioning */}
+              <div className="flex justify-end pt-6 mt-6  -mx-6 px-6 py-4 sticky bottom-0 z-10">
                 <GeneralButton
                   type="submit"
                   variant="primary"
                   size="medium"
-                  onClick={async () => {
-                    const result = await updateProduct(categoryID, formData.productID, formData);
-                    if (result.success) {
-                      // console.log('Product updated successfully!');
-                      setIsExpanded(false);
-                    } else {
-                      // console.error('Update failed:', result.message);
-                    }
-                  }}
+                  className="shadow-lg"
+                  onClick={submitCollapsableForm}
                 >
                   {singleProduct ? 'Update Product' : 'Add Product'}
                 </GeneralButton>

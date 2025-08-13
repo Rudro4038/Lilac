@@ -38,11 +38,11 @@ const ImageContainer = ({ singleProduct, deletable, onDeleteImage }) => {
     <>
       {singleProduct && singleProduct.imageLinks && singleProduct.imageLinks.length > 0 ? (
         <>
-          <div className="relative">
+          <div className="">
             <img
               src={getFallbackImageUrl(singleProduct.imageLinks?.[currentImageIndex])}
               alt={`${singleProduct.name} - Image ${currentImageIndex + 1}`}
-              className="w-full h-auto max-h-[70vh] object-contain rounded-lg"
+              className="w-full h-auto max-h-[50vh] object-contain rounded-lg"
             />
           </div>
 

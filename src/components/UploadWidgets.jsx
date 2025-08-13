@@ -21,11 +21,15 @@ const UploadWidgets = ({ formData, setFormData, categoryID }) => {
 
   useEffect(() => {
     if (publicId) {
-      console.log('Adding publicId to imageLinks:', publicId);
-      setFormData(prev => ({
-        ...prev,
-        imageLinks: [...prev.imageLinks, publicId],
-      }));
+      // console.log('Adding publicId to imageLinks:', publicId);
+      // console.log('Current formData.imageLinks:', formData.imageLinks);
+      setFormData(prev => {
+        const currentImageLinks = Array.isArray(prev.imageLinks) ? prev.imageLinks : [];
+        return {
+          ...prev,
+          imageLinks: [...currentImageLinks, publicId],
+        };
+      });
     }
   }, [publicId, setFormData]);
 
@@ -71,13 +75,13 @@ const UploadWidgets = ({ formData, setFormData, categoryID }) => {
                 plugins={[responsive(), placeholder()]}
                 onError={error => {
                   console.error('AdvancedImage error:', error);
-                  console.log('Failed publicId:', publicId);
-                  console.log('Switching to fallback image...');
+                  // console.log('Failed publicId:', publicId);
+                  // console.log('Switching to fallback image...');
                   setImageError(true);
                 }}
                 onLoad={() => {
-                  console.log('AdvancedImage loaded successfully');
-                  console.log('Loaded publicId:', publicId);
+                  // console.log('AdvancedImage loaded successfully');
+                  // console.log('Loaded publicId:', publicId);
                 }}
                 alt={`Uploaded image: ${publicId}`}
               />

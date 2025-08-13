@@ -3,7 +3,7 @@ import { db } from '../firebase/initFirebase';
 
 const InventoryProductUpdate = () => {
   const updateProduct = async (categoryID, productID, formData) => {
-    console.log(formData);
+    // console.log(formData);
     
     try {
 
@@ -34,11 +34,11 @@ const InventoryProductUpdate = () => {
       // Delete the product from the database
       await remove(productRef);
       
-      console.log(`Product ${productID} in category ${categoryID} deleted successfully`);
+      // console.log(`Product ${productID} in category ${categoryID} deleted successfully`);
       return { success: true, message: 'Product deleted successfully' };
       
     } catch (error) {
-      console.error('Error deleting product:', error);
+      // console.error('Error deleting product:', error);
       return { success: false, message: error.message };
     }
   };

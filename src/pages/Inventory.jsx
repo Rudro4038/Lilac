@@ -37,7 +37,7 @@ const Inventory = () => {
       {hookProducts &&
         Array.isArray(hookProducts) &&
         hookProducts.map(products => (
-          <div className="my-6" key={products.categoryID}>
+          <div className="my-24" key={products.categoryID}>
             <InventoryProductTable products={products} categoryID={products.categoryID} />
           </div>
         ))}

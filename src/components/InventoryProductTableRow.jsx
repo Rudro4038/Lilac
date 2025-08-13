@@ -188,23 +188,23 @@ const InventoryProductTableRow = ({ singleProduct, categoryID }) => {
                     );
 
                     if (isConfirmed) {
-                      // eslint-disable-next-line no-console
-                      console.log('User confirmed deletion');
+                    
+                      // console.log('User confirmed deletion');
 
                       const result = await deleteProduct(categoryID, singleProduct.productID);
 
                       if (result.success) {
-                        // eslint-disable-next-line no-console
-                        console.log('Product deleted successfully!');
+                       
+                        // console.log('Product deleted successfully!');
                         // You could add a success notification here
                       } else {
-                        // eslint-disable-next-line no-console
-                        console.error('Delete failed:', result.message);
-                        alert('Failed to delete product: ' + result.message);
+                        // // eslint-disable-next-line no-console
+                        // console.error('Delete failed:', result.message);
+                        // alert('Failed to delete product: ' + result.message);
                       }
                     } else {
-                      // eslint-disable-next-line no-console
-                      console.log('User cancelled deletion');
+                    
+                      // console.log('User cancelled deletion');
                     }
                   }}
                 >
@@ -225,17 +225,20 @@ const InventoryProductTableRow = ({ singleProduct, categoryID }) => {
 
       {/* Image Modal */}
       {isImageModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-lg max-w-4xl max-h-[90vh] w-full mx-4">
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="relative bg-white rounded-lg max-w-4xl max-h-[90vh] w-full overflow-hidden shadow-2xl">
             {/* Close Button */}
             <button
               onClick={closeImageModal}
-              className="absolute top-4 right-4 z-10 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 z-20 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors shadow-lg"
             >
               ×
             </button>
 
-            <ImageContainer singleProduct={singleProduct} deletable={false} />
+            {/* Modal Content Container */}
+            <div className="overflow-y-auto  p-6 ">
+              <ImageContainer singleProduct={singleProduct} deletable={false} />
+            </div>
           </div>
         </div>
       )}
