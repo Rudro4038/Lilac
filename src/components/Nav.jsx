@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 // import { useAuth } from "../contexts/AuthContext.jsx";
-// import { useNavigate } from "react-router-dom";
-import AccountMenu from './AccountMenu';
+import { Link, useNavigate } from 'react-router-dom';
+import CartSidebar from './CartSidebar';
 import IconButton from './IconButton';
+import MenuSideBar from './MenuSideBar';
 
 //{ navRef, SingInAndDirectToChatInterface }
 function Nav() {
   const [isSticky, setIsSticky] = useState(false);
+  const navigate = useNavigate();
   // const currentUser = null;
 
   useEffect(() => {
@@ -36,36 +38,19 @@ function Nav() {
           margin: isSticky ? '0 auto' : '0 auto',
         }}
       >
-        <IconButton icon={'menu'} />
+        <MenuSideBar />
 
         {/* absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 */}
-        <div className="logo h-[20px] sm:h-[25px] md:h-[30px] max-w-[120px] sm:max-w-[150px] md:max-w-[180px] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ">
-          <img
-            src="/onlyLilacLogo.png"
-            alt="Lilac Logo"
-            className="w-full h-full object-contain"
-          />
-        </div>
+        <Link
+          to="/home"
+          className="logo h-[20px] sm:h-[25px] md:h-[30px] max-w-[120px] sm:max-w-[150px] md:max-w-[180px] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
+        >
+          <img src="/onlyLilacLogo.png" alt="Lilac Logo" className="w-full h-full object-contain" />
+        </Link>
         <div className="">
           <>
-            {/* <button
-                className="rounded-md font-medium bg-(--color-ShaddedWhite) border-2 border-[#f2f2f2] text-(--color-backgroundDark) hover:bg-(--color-backgroundDark) hover:text-(--color-ShaddedWhite)"
-                //   onClick={SingInAndDirectToChatInterface}
-              >
-                Sign In
-              </button>
-              <button
-                className="rounded-md font-medium bg-(--color-ShaddedWhite) border-2 border-[#f2f2f2] text-(--color-backgroundDark) hover:bg-(--color-backgroundDark) hover:text-(--color-ShaddedWhite)"
-                //   onClick={SingInAndDirectToChatInterface}
-              >
-                Sign Up
-                </button> */}
-            <IconButton
-              icon={'shopping_bag'}
-              styleClass={'invisible sm:visible'}
-            />
-            {/* <IconButton icon={"account_circle"} /> */}
-            <AccountMenu />
+            <CartSidebar />
+            <IconButton icon={'account_circle'} styleClass={'hidden sm:block'} onClick={() => navigate('/profile')}/>
           </>
         </div>
       </div>

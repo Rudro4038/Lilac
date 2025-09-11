@@ -7,6 +7,7 @@ import Order from './pages/Order';
 import Login from './pages/Login';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Inventory from './pages/Inventory';
+import Category from './pages/Category';
 
 function App() {
   return (
@@ -26,6 +27,14 @@ function App() {
           element={
             <LayOut viewer="Customer">
               <Login />
+            </LayOut>
+          }
+        />
+        <Route
+          path="/category/:categoryName"
+          element={
+            <LayOut viewer="Customer">
+              <Category />
             </LayOut>
           }
         />
